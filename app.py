@@ -448,7 +448,10 @@ else:
                 pdf.add_page()
                 pdf.set_font("Helvetica", size=12)
                 for line in export_text_clean.split("\n"):
-                    pdf.multi_cell(0, 8, line)
+                    if line.strip():
+                        pdf.multi_cell(0, 8, line)
+                    else:
+                        pdf.ln(4)
                 pdf_bytes = bytes(pdf.output(dest="S"))
                 st.download_button(
                     label="Download PDF",
