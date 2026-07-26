@@ -430,13 +430,26 @@ else:
             try:
                 from fpdf import FPDF
 
+                def sanitize_for_pdf(text):
+                    replacements = {
+                        "\u2018": "'", "\u2019": "'",
+                        "\u201c": '"', "\u201d": '"',
+                        "\u2013": "-", "\u2014": "-",
+                        "\u2022": "-",
+                        "\u2026": "...",
+                    }
+                    for orig, repl in replacements.items():
+                        text = text.replace(orig, repl)
+                    return text.encode("latin-1", "replace").decode("latin-1")
+
+                export_text_clean = sanitize_for_pdf(export_text)
+
                 pdf = FPDF()
                 pdf.add_page()
                 pdf.set_font("Helvetica", size=12)
-                for line in export_text.split("\n"):
+                for line in export_text_clean.split("\n"):
                     pdf.multi_cell(0, 8, line)
                 pdf_bytes = bytes(pdf.output(dest="S"))
-
                 st.download_button(
                     label="Download PDF",
                     data=pdf_bytes,
