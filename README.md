@@ -1,148 +1,464 @@
-🎬 AI Video & Meeting Assistant with RAG
-![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-LCEL-1C3C3C?logo=chainlink&logoColor=white)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-VectorStore-6E56CF)
-![Groq API](https://img.shields.io/badge/Mistral%20AI-LLM-FF7000)
-![License](https://img.shields.io/badge/License-MIT-green)
-A completely free, local-first, and production-ready AI Video and Meeting Assistant built in Python. It automates the tedious post-meeting workflow: accepting video/audio files or YouTube URLs, transcribing them with local Whisper models or the Sarvam AI API, generating structured summaries via Groq API, extracting actionable insights (tasks, owners, deadlines), and indexing everything into ChromaDB for interactive, context-grounded Q&A chat.
-🔗 Live Demo  |  💻 Source Code
+# 🎬 AI Video & Meeting Assistant
+
+An AI-powered application that transforms audio and video content into structured, searchable information using speech transcription, large language models (LLMs), and retrieval-augmented generation (RAG).
+
+<p align="center">
+  <a href="https://ai-video-assistant-t4gdlfhn37sx44gd4kbcpt.streamlit.app/">
+    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open Live Demo">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://ai-video-assistant-t4gdlfhn37sx44gd4kbcpt.streamlit.app/">
+    🚀 <strong>Try the Live Demo</strong>
+  </a>
+  &nbsp; | &nbsp;
+  <a href="https://github.com/Chetansk134/AI-video-assistant">
+    💻 <strong>View Source Code</strong>
+  </a>
+</p>
+
+<p align="center">
+  <strong>Transcribe · Summarize · Extract Insights · Ask Questions</strong>
+</p>
+
 ---
-📸 Demo
-> _Add a screenshot or GIF of the Control Room UI here — e.g. `docs/demo.gif` — showing upload → transcription → summary → chat in action. This is the single highest-impact addition you can make to this README._
+
+## 📌 Overview
+
+The AI Video & Meeting Assistant automates the process of understanding long videos, lectures, interviews, presentations, and meetings.
+
+Users can upload audio/video files or provide a YouTube URL to generate transcripts, summaries, action items, key decisions, and answers to questions about the content.
+
+The application combines speech recognition, LLM-powered analysis, vector search, and conversational question answering in a single interface.
+
+### 🎯 Project Objectives
+
+* Automate audio and video transcription.
+* Generate concise, structured summaries.
+* Extract actionable tasks and important decisions.
+* Identify unresolved questions and discussion points.
+* Enable context-aware question answering.
+* Reduce the time required to review long recordings.
+
 ---
-🚀 Features
-Multi-Source Ingestion — process YouTube URLs directly or upload local files (`.mp3`, `.mp4`, `.wav`)
-100% Free & Local Transcription — runs OpenAI's Whisper locally on a standard CPU (8GB+ RAM, no GPU needed)
-High-Quality Hindi Transcription — Hindi-to-English translation via local Whisper or the Sarvam AI API (`saaras:v2.5`)
-Automated Summarization & Title Generation — Groq API (`openai/gpt-oss-20b`) via LangChain LCEL pipelines
-Actionable Insight Extraction — auto-identifies key decisions, open questions, and action items (with owners & deadlines)
-RAG-Powered Q&A Chat — chunked transcripts, local embeddings (`all-MiniLM-L6-v2`), ChromaDB indexing, and grounded conversational retrieval
-Export Capabilities — download meeting summaries and transcripts as TXT or PDF
-Interactive Web UI — a custom "Control Room" dashboard built entirely with Streamlit
+
+## ✨ Features
+
+### 🎥 1. Multiple Input Sources
+
+* Upload local audio and video files.
+* Provide a YouTube URL for audio retrieval when supported.
+* Convert media files into WAV audio.
+* Split long audio recordings into smaller chunks.
+
+### 🎙️ 2. Speech-to-Text Transcription
+
+* Transcribe audio using Whisper-based models.
+* Support the configured Sarvam AI transcription integration.
+* Process long recordings through audio chunking.
+* Generate text that can be used by downstream AI components.
+
+### 📝 3. AI-Powered Summarization
+
+* Generate descriptive titles for processed content.
+* Produce structured summaries.
+* Highlight important topics and discussion points.
+* Make lengthy recordings easier to understand.
+
+### ✅ 4. Action Item Extraction
+
+Extract actionable information from transcripts, including:
+
+* Tasks and follow-up activities.
+* Responsibilities mentioned in the discussion.
+* Deadlines and time-related commitments, when stated.
+
+### 📌 5. Key Decision Extraction
+
+Identify important decisions, conclusions, and agreements discussed in the recording.
+
+### ❓ 6. Open Question Detection
+
+Identify unresolved questions and topics that may require further clarification.
+
+### 💬 7. Conversational Question Answering
+
+* Ask questions about the processed recording.
+* Retrieve relevant transcript information.
+* Generate context-aware answers using Groq and RAG.
+
+### 🔎 8. Retrieval-Augmented Generation (RAG)
+
+* Store transcript information in ChromaDB.
+* Retrieve relevant context for user questions.
+* Use retrieved information to support answer generation.
+
+### 📄 9. Export
+
+Export supported results, including transcript and summary information, using the available TXT and PDF export functionality.
+
 ---
-🏗️ Architecture
+
+## 🛠️ Technology Stack
+
+| Component                 | Technology                     |
+| ------------------------- | ------------------------------ |
+| Programming Language      | Python                         |
+| Frontend / User Interface | Streamlit                      |
+| Speech Recognition        | Whisper / faster-whisper       |
+| Alternative Transcription | Sarvam AI                      |
+| Large Language Model API  | Groq API                       |
+| LLM Integration           | LangChain                      |
+| Vector Database           | ChromaDB                       |
+| Audio Processing          | PyDub                          |
+| YouTube Audio Retrieval   | yt-dlp                         |
+| Audio Extraction          | FFmpeg                         |
+| PDF Generation            | FPDF2 / configured PDF library |
+| Deployment                | Streamlit Community Cloud      |
+| Version Control           | Git and GitHub                 |
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                 USER INPUT
+                     |
+          +----------+----------+
+          |                     |
+     YouTube URL          Audio/Video Upload
+          |                     |
+          v                     v
+     yt-dlp Download       Media Processing
+          |                     |
+          +----------+----------+
+                     |
+                     v
+             Audio Conversion
+                     |
+                     v
+              Audio Chunking
+                     |
+                     v
+                Transcription
+              Whisper / Sarvam
+                     |
+                     v
+                Full Transcript
+                     |
+          +----------+----------+
+          |          |          |
+          v          v          v
+       Summary    Action Items  Decisions
+          |          |          |
+          +----------+----------+
+                     |
+                     v
+             ChromaDB Vector Store
+                     |
+                     v
+              Relevant Context
+                 Retrieval
+                     |
+                     v
+                  Groq API
+                     |
+                     v
+             Question Answering
 ```
-YouTube URL / File Upload
-        │
-        ▼
- ┌─────────────────┐
- │  Audio Extract   │  yt-dlp + ffmpeg → pydub (mono, 16kHz)
- └────────┬────────┘
-          ▼
- ┌─────────────────┐
- │  Chunking        │  10-min segments (memory-safe local processing)
- └────────┬────────┘
-          ▼
- ┌─────────────────┐
- │  Transcription   │  faster-whisper (local) or Sarvam AI (Hindi)
- └────────┬────────┘
-          ▼
- ┌─────────────────┐         ┌──────────────────────┐
- │  Summarization   │────────▶  Action Items /       │
- │  (Groq LCEL)  │         │  Key Decisions /      │
- └────────┬────────┘         │  Open Questions       │
-          ▼                  └──────────────────────┘
- ┌─────────────────┐
- │  Vector Store    │  HF embeddings → ChromaDB (persistent, local)
- └────────┬────────┘
-          ▼
- ┌─────────────────┐
- │  RAG Chat        │  similarity search → grounded LLM response
- └─────────────────┘
-```
-Input Processing — audio is extracted from local files or downloaded from YouTube via `yt-dlp` & `ffmpeg`
-Audio Standardization — `pydub` converts audio to mono-channel, 16kHz (Whisper's sweet spot)
-Chunking — large files are sliced into 10-minute segments to avoid memory overload
-Transcription — processed via Whisper (English/default) or Sarvam AI's Saaras model (Hindi)
-Summarization & Extraction — Groq API generates a structured summary plus action items, decisions, and questions
-Vector Search (RAG) — transcript is split into 500-character overlapping chunks, embedded, and persisted in a local ChromaDB instance (`vector_db/`)
-Interactive Chat — similarity search retrieves relevant chunks, grounding responses to reduce hallucination
+
+**Note:** The YouTube input path depends on whether the video can be accessed and downloaded. On Streamlit Community Cloud, uploading an audio/video file is the recommended alternative when direct YouTube downloading fails.
+
 ---
-🛠️ Tech Stack
-Layer	Technology
-Language	Python 3.12
-Orchestration	LangChain (LCEL, RunnablePassthrough, RunnableLambda)
-Speech-to-Text	OpenAI Whisper / faster-whisper (local), Sarvam AI (`saaras:v2.5`)
-LLM	Groq API (`openai/gpt-oss-20b` via ChatGroq)
-Vector Database	ChromaDB
-Embeddings	HuggingFace `sentence-transformers/all-MiniLM-L6-v2` (local)
-Media Utilities	`yt-dlp`, `ffmpeg`, `pydub`
-PDF Export	`fpdf2`
-UI	Streamlit
-Deployment	Streamlit Community Cloud
+
+## 🔄 How It Works
+
+1. **Input:** The user uploads an audio/video file or provides a YouTube URL.
+2. **Audio Processing:** The application retrieves or extracts audio and converts it into a suitable format.
+3. **Chunking:** Long recordings are divided into smaller audio segments.
+4. **Transcription:** Whisper or the configured Sarvam AI integration converts speech into text.
+5. **Summarization:** Groq generates a title and structured summary.
+6. **Insight Extraction:** The application extracts action items, decisions, and open questions.
+7. **Vector Storage:** Transcript information is indexed using ChromaDB.
+8. **Question Answering:** Relevant context is retrieved and supplied to the language model.
+9. **Results:** The user can review, query, and export the generated information.
+
 ---
-📁 Project Structure
-```
-.
+
+## ⚠️ Known Limitation: YouTube Downloads
+
+**Direct YouTube audio downloading may fail on Streamlit Community Cloud with HTTP 403: Forbidden.**
+
+This project uses `yt-dlp` to retrieve audio from YouTube URLs. YouTube may reject automated download requests from cloud-hosting environments.
+
+During testing, YouTube URL processing worked in the local development environment but returned HTTP 403 errors in the deployed Streamlit application.
+
+### Local Environment
+
+YouTube URL processing may work locally when:
+
+* The video is accessible.
+* The installed downloader is compatible.
+* YouTube permits the download request.
+* No additional authentication or access restrictions prevent retrieval.
+
+### Streamlit Community Cloud
+
+Direct YouTube downloads may fail because of hosting-environment restrictions, authentication requirements, or changes to YouTube's download mechanisms.
+
+Updating `yt-dlp` can resolve some compatibility problems, but it does not guarantee that every video will download successfully.
+
+### Recommended Workaround
+
+When YouTube downloading fails:
+
+1. Obtain an audio/video file that you are authorized to process.
+2. Select **Upload audio/video file** in the application.
+3. Upload the file.
+4. Click **RUN ASSISTANT**.
+
+The uploaded-file workflow allows users to continue using the transcription, summarization, action-item extraction, decision extraction, and question-answering features without relying on direct YouTube downloads.
+
+**Important:** The live demo is available, but YouTube URL processing may be limited. Use file uploads when direct downloads fail.
+
+---
+
+## 📂 Project Structure
+
+The following is an illustrative structure. The actual files in the repository may differ.
+
+```text
+AI-video-assistant/
+│
+├── app.py
+├── requirements.txt
+├── packages.txt
+├── README.md
+│
 ├── core/
-│   ├── transcriber.py     # Local Whisper & Sarvam AI transcription logic
-│   ├── summarize.py       # Groq API-driven summarization & title generation
-│   ├── extractor.py       # Action items, key decisions, and questions extractor
-│   ├── vector_store.py    # HuggingFace embeddings and ChromaDB storage
-│   └── rag_engine.py      # LangChain RAG pipeline and Q&A chat engine
+│   ├── summarize.py
+│   ├── extractor.py
+│   ├── rag_engine.py
+│   ├── transcriber.py
+│   └── vector_store.py
+│
 ├── utils/
-│   └── audio_processor.py # YouTube downloading, audio conversion & chunking
-├── app.py                 # Streamlit web UI
-├── main.py                # CLI pipeline orchestrator
-├── requirements.txt        # Python dependencies
-├── packages.txt             # System-level dependencies (ffmpeg) for cloud deployment
-└── .env                    # Environment API keys (not committed)
+│   └── audio_processor.py
+│
+├── downloads/
+│
+└── .streamlit/
+    └── config.toml
 ```
+
+### Important Files
+
+| File                       | Purpose                                          |
+| -------------------------- | ------------------------------------------------ |
+| `app.py`                   | Main Streamlit application                       |
+| `requirements.txt`         | Python dependencies                              |
+| `packages.txt`             | System packages required for deployment          |
+| `core/summarize.py`        | Title generation and summarization               |
+| `core/extractor.py`        | Action items, decisions, and question extraction |
+| `core/rag_engine.py`       | Retrieval-based question answering               |
+| `core/transcriber.py`      | Audio transcription                              |
+| `utils/audio_processor.py` | Audio downloading, conversion, and chunking      |
+
+The exact filenames and responsibilities should be adjusted to match the current repository.
+
 ---
-⚙️ Installation & Setup
-1. Clone the Repository
+
+## ⚙️ Installation and Setup
+
+### Prerequisites
+
+Install the following:
+
+* Python 3.11 or another Python version compatible with the project's dependencies.
+* Git.
+* FFmpeg.
+* A Groq API key.
+* A Sarvam AI API key if you use the Sarvam transcription integration.
+
+### Step 1: Clone the Repository
+
 ```bash
 git clone https://github.com/Chetansk134/AI-video-assistant.git
+```
+
+Navigate to the project directory:
+
+```bash
 cd AI-video-assistant
 ```
-2. Set Up a Virtual Environment
-```bash
-uv venv venv_video_agent
 
-# macOS/Linux
-source venv_video_agent/bin/activate
-# Windows
-venv_video_agent\Scripts\activate
+### Step 2: Create a Virtual Environment
+
+On Windows:
+
+```powershell
+python -m venv .venv
 ```
-3. Install Dependencies
+
+Activate it:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+If PowerShell blocks activation, use the appropriate activation command for your terminal or system policy.
+
+### Step 3: Install Dependencies
+
+Upgrade pip:
+
 ```bash
-uv pip install -r requirements.txt
+python -m pip install --upgrade pip
 ```
-> Requires `ffmpeg` installed locally for audio processing.
-4. Configure Environment Variables
-Create a `.env` file in the root directory:
-```env
-GROQ_API_KEY="your_groq_api_key"
-SARVAM_API_KEY="your_sarvam_api_key"   # optional, only for Hindi transcription
-SARVAM_STT_MODEL="saaras:v3"
-WHISPER_MODEL="base"                    # tiny, base, small, medium, large
-```
----
-💻 Usage
-Streamlit Web App
+
+Install the project's dependencies:
+
 ```bash
-streamlit run app.py
+python -m pip install -r requirements.txt
 ```
-Command Line Pipeline
+
+Ensure FFmpeg is installed and available on your system PATH.
+
+If the project requires additional system dependencies, configure them as documented in `packages.txt`.
+
+### Step 4: Configure API Keys
+
+For local development, configure your API keys using environment variables or the secrets configuration supported by your application.
+
+For Streamlit Community Cloud, open your application's settings and configure the required secrets.
+
+Example Streamlit Secrets configuration:
+
+```toml
+GROQ_API_KEY = "your_groq_api_key"
+SARVAM_API_KEY = "your_sarvam_api_key"
+```
+
+Add any other settings required by your implementation.
+
+**Security precautions:**
+
+* Never commit real API keys to GitHub.
+* Do not publish `.env` files containing credentials.
+* Keep API keys private.
+* Configure secrets separately for local development and cloud deployment.
+
+### Step 5: Run the Application
+
+From the project root, run:
+
 ```bash
-python main.py
+python -m streamlit run app.py
 ```
-Enter a YouTube URL or local file path, select the language, and chat with the meeting directly in the terminal.
+
+Open the local URL displayed in the terminal, usually:
+
+```text
+http://localhost:8501
+```
+
 ---
-⚠️ Known Limitation: YouTube URLs on Cloud Deployment
-The live deployed demo cannot download YouTube videos directly. This is a deliberate, documented tradeoff — not an application bug:
-> YouTube's anti-bot system flags requests from cloud/datacenter IP ranges (AWS, GCP, Streamlit Cloud, etc.) and requires proof-of-origin authentication that client-spoofing alone cannot bypass. This affects any app hosted on cloud infrastructure that tries to fetch YouTube content programmatically — it's an IP-reputation restriction, not a code defect.
-Workarounds considered and why they were skipped:
-Cookie-based auth — requires uploading a real, logged-in session's cookies to a public app; a security risk and a Terms-of-Service gray area for public deployments
-Third-party PO-token providers — adds a second service and non-trivial infrastructure for a demo-scoped project
-Practical resolution: the app fully supports direct file upload (`.mp3`, `.mp4`, `.wav`) as its primary path in the deployed version, and this is the recommended way to try the live demo. YouTube URL support works normally when running the app locally, since home/residential IPs aren't subject to this restriction.
+
+## ☁️ Deployment on Streamlit Community Cloud
+
+To deploy the project:
+
+1. Push the source code to GitHub.
+2. Open Streamlit Community Cloud.
+3. Create an application connected to your GitHub repository.
+4. Select the correct repository, branch, and entry-point file.
+5. Configure the required API keys under **App settings → Secrets**.
+6. Deploy the application.
+7. Review the deployment logs.
+8. Test file uploads, transcription, summarization, and question answering.
+
+### Deployment Considerations
+
+* Local and cloud environments may behave differently.
+* Direct YouTube downloads may return HTTP 403.
+* Uploaded files are the recommended alternative when YouTube downloads fail.
+* Local environment variables do not automatically transfer to Streamlit Cloud.
+* API keys must be configured separately in the deployed application's secrets.
+* Ensure all required Python and system dependencies are available.
+
 ---
-🗺️ Roadmap
-[ ] Streaming chat responses (token-by-token)
-[ ] Speaker diarization (who said what)
-[ ] Multi-video comparison and cross-video RAG chat
-[ ] Source-grounding indicators in chat answers
+
+## 🧪 Testing Checklist
+
+Use this checklist to verify the application.
+
+* [ ] Application launches successfully.
+* [ ] MP3 audio upload works.
+* [ ] WAV audio upload works.
+* [ ] Supported video uploads work.
+* [ ] Audio conversion works.
+* [ ] Transcription produces readable text.
+* [ ] Title generation works.
+* [ ] Summary generation works.
+* [ ] Action items are extracted.
+* [ ] Key decisions are identified.
+* [ ] Open questions are extracted.
+* [ ] Chat answers questions about the transcript.
+* [ ] Supported TXT and PDF exports work.
+* [ ] YouTube URL processing works locally for accessible videos.
+* [ ] Cloud deployment handles YouTube download failures gracefully.
+* [ ] API keys are stored securely.
+
 ---
-📄 License
-MIT
+
+## 🔐 Security and Privacy
+
+* Store API keys using environment variables or Streamlit Secrets.
+* Do not commit credentials to GitHub.
+* Avoid publishing private authentication cookies or tokens.
+* Remove temporary media files when they are no longer required.
+* Process only content you have permission to access and use.
+* Review the privacy policies of any external AI services used by the application.
+
+---
+
+## 🚀 Future Enhancements
+
+* Add transcript retrieval as a fallback when captions are available and accessible.
+* Improve error handling for YouTube download failures.
+* Add caching to reduce repeated transcription and API usage.
+* Improve processing of long recordings using hierarchical summarization.
+* Add more language options.
+* Improve progress indicators for long-running tasks.
+* Implement automatic cleanup of temporary audio files.
+* Add comprehensive logging and automated tests.
+* Improve resilience to temporary API rate limits.
+* Add support for more audio and video sources.
+
+---
+
+## 📄 License
+
+This project is described as using the MIT License. Refer to the repository's `LICENSE` file for the authoritative license terms.
+
+---
+
+## 👨‍💻 Author
+
+**Chetan Kalamadi**
+
+AI Video & Meeting Assistant
+
+A project demonstrating speech transcription, LLM-powered summarization, information extraction, vector search, and retrieval-augmented question answering.
+
+### 🔗 Project Links
+
+* **Live Demo:** https://ai-video-assistant-t4gdlfhn37sx44gd4kbcpt.streamlit.app/
+* **GitHub Repository:** https://github.com/Chetansk134/AI-video-assistant
+
+---
+
+<p align="center">
+  <strong>Built with Python, Streamlit, Whisper, Groq, LangChain, and ChromaDB.</strong>
+</p>
